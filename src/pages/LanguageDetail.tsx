@@ -45,6 +45,12 @@ export default function LanguageDetail() {
               <motion.div className="h-full rounded-full bg-white" initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8 }} />
             </div>
           </div>
+          <Link
+            to={`/phrasebook/${lang.id}`}
+            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-white/90"
+          >
+            💬 Practise travel phrases
+          </Link>
         </div>
       </motion.section>
 

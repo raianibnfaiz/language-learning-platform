@@ -1,4 +1,4 @@
-import { BarChart3, BookOpen, Bookmark, Globe2, LayoutDashboard, Sparkles, type LucideIcon } from 'lucide-react'
+import { BarChart3, BookOpen, Bookmark, Brain, Globe2, LayoutDashboard, MessageCircleHeart, Sparkles, type LucideIcon } from 'lucide-react'
 
 export interface NavItem {
   to: string
@@ -8,7 +8,9 @@ export interface NavItem {
 
 export const mainNav: NavItem[] = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/languages', label: 'Languages', icon: Globe2 },
+  { to: '/phrasebook', label: 'Phrasebook', icon: MessageCircleHeart },
+  { to: '/review', label: 'Review', icon: Brain },
+  { to: '/languages', label: 'Career languages', icon: Globe2 },
   { to: '/practice', label: 'Practice', icon: Sparkles },
   { to: '/progress', label: 'Progress', icon: BarChart3 },
   { to: '/bookmarks', label: 'Bookmarks', icon: Bookmark },

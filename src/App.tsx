@@ -1,10 +1,11 @@
 import { AnimatePresence } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import PageTransition from './components/PageTransition'
 import Sidebar from './components/Sidebar'
+import { PhrasebookProvider } from './context/PhrasebookProvider'
 import { ProgressProvider } from './context/ProgressProvider'
 import { useTheme } from './context/theme'
 import About from './pages/About'
@@ -16,10 +17,20 @@ import NotFound from './pages/NotFound'
 import Practice from './pages/Practice'
 import Progress from './pages/Progress'
 
+// The phrasebook carries 54 languages of content, so it loads on demand
+const PhrasebookHome = lazy(() => import('./pages/phrasebook/PhrasebookHome'))
+const LanguageHub = lazy(() => import('./pages/phrasebook/LanguageHub'))
+const SituationPage = lazy(() => import('./pages/phrasebook/SituationPage'))
+const Review = lazy(() => import('./pages/phrasebook/Review'))
+
 const routes = [
   { path: '/', element: <Dashboard /> },
   { path: '/languages', element: <Languages /> },
   { path: '/languages/:id', element: <LanguageDetail /> },
+  { path: '/phrasebook', element: <PhrasebookHome /> },
+  { path: '/phrasebook/:langId', element: <LanguageHub /> },
+  { path: '/phrasebook/:langId/:situationId', element: <SituationPage /> },
+  { path: '/review', element: <Review /> },
   { path: '/practice', element: <Practice /> },
   { path: '/progress', element: <Progress /> },
   { path: '/bookmarks', element: <Bookmarks /> },
@@ -38,6 +49,7 @@ export default function App() {
 
   return (
     <ProgressProvider>
+      <PhrasebookProvider>
       <div className="min-h-screen">
         <Header theme={theme} onToggleTheme={toggle} onOpenMenu={() => setMenuOpen(true)} />
         <div className="flex">
@@ -47,7 +59,7 @@ export default function App() {
               <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                   {routes.map((r) => (
-                    <Route key={r.path} path={r.path} element={<PageTransition>{r.element}</PageTransition>} />
+                    <Route key={r.path} path={r.path} element={<PageTransition><Suspense fallback={<div className="grid h-64 place-items-center text-4xl"><span className="animate-bounce">🌱</span></div>}>{r.element}</Suspense></PageTransition>} />
                   ))}
                 </Routes>
               </AnimatePresence>
@@ -56,6 +68,7 @@ export default function App() {
           </div>
         </div>
       </div>
+      </PhrasebookProvider>
     </ProgressProvider>
   )
 }

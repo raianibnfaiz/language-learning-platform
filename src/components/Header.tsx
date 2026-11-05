@@ -3,7 +3,7 @@ import { motion } from 'motion/react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/progress'
-import { languages } from '../data/languages'
+import { catalogSorted } from '../data/phrasebook/catalog'
 import Logo from './Logo'
 
 interface Props {
@@ -18,9 +18,9 @@ export default function Header({ theme, onToggleTheme, onOpenMenu }: Props) {
   const [query, setQuery] = useState('')
 
   const matches = query
-    ? languages.filter((l) =>
-        `${l.name} ${l.nativeName}`.toLowerCase().includes(query.toLowerCase()),
-      )
+    ? catalogSorted
+        .filter((l) => `${l.name} ${l.nativeName}`.toLowerCase().includes(query.toLowerCase()))
+        .slice(0, 8)
     : []
 
   return (
@@ -43,7 +43,7 @@ export default function Header({ theme, onToggleTheme, onOpenMenu }: Props) {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search languages…"
+            placeholder="Search 54 languages…"
             className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pr-3 pl-9 text-sm outline-none transition focus:border-primary-400 focus:bg-white focus:ring-4 focus:ring-primary-600/10 dark:border-slate-800 dark:bg-slate-900 dark:focus:bg-slate-900"
           />
           {matches.length > 0 && (
@@ -56,14 +56,14 @@ export default function Header({ theme, onToggleTheme, onOpenMenu }: Props) {
                 <li key={l.id}>
                   <button
                     onClick={() => {
-                      navigate(`/languages/${l.id}`)
+                      navigate(`/phrasebook/${l.id}`)
                       setQuery('')
                     }}
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm hover:bg-slate-50 dark:hover:bg-slate-800"
                   >
                     <span className="text-xl">{l.flag}</span>
                     <span className="font-medium">{l.name}</span>
-                    <span className="ml-auto text-xs text-slate-400">#{l.rank}</span>
+                    <span className="ml-auto text-xs text-slate-400">{l.nativeName}</span>
                   </button>
                 </li>
               ))}

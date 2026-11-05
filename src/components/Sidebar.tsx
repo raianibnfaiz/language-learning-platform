@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { NavLink } from 'react-router-dom'
+import { usePhrasebook } from '../context/phrasebook'
 import { useProgress } from '../context/progress'
 import { languages } from '../data/languages'
 import Logo from './Logo'
@@ -8,6 +9,7 @@ import { mainNav } from './nav'
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const { completedLessons } = useProgress()
+  const { due } = usePhrasebook()
 
   return (
     <nav className="flex h-full flex-col gap-6 overflow-y-auto p-4">
@@ -39,6 +41,16 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                     )}
                     <Icon className="relative size-4.5" />
                     <span className="relative">{label}</span>
+                    {to === '/review' && due.length > 0 && (
+                      <motion.span
+                        key={due.length}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="relative ml-auto rounded-full bg-amber-400 px-2 py-0.5 text-xs font-bold text-amber-950"
+                      >
+                        {due.length}
+                      </motion.span>
+                    )}
                   </>
                 )}
               </NavLink>
@@ -49,7 +61,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       <div>
         <p className="mb-2 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
-          My languages
+          Career courses
         </p>
         <ul className="space-y-1">
           {languages.map((l) => {
@@ -88,13 +100,13 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       <div className="mt-auto rounded-2xl bg-gradient-to-br from-primary-600 to-primary-400 p-4 text-white">
         <p className="text-sm font-semibold">Daily goal</p>
-        <p className="mt-1 text-xs text-white/80">Practice 10 minutes a day to keep your streak alive.</p>
+        <p className="mt-1 text-xs text-white/80">Learn a few phrases a day to keep your streak alive.</p>
         <NavLink
-          to="/practice"
+          to="/phrasebook"
           onClick={onNavigate}
           className="mt-3 inline-block rounded-lg bg-white/20 px-3 py-1.5 text-xs font-semibold backdrop-blur hover:bg-white/30"
         >
-          Start practice →
+          Open phrasebook →
         </NavLink>
       </div>
     </nav>
