@@ -1,4 +1,4 @@
-import { BookmarkPlus, Check, ChevronLeft, ChevronRight, Mic, NotebookPen, Pause, Play, Snail, Square, Volume2 } from 'lucide-react'
+import { BookmarkPlus, Check, Heart, ChevronLeft, ChevronRight, Mic, NotebookPen, Pause, Play, Snail, Square, Volume2 } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import VoicePicker from '../../components/VoicePicker'
@@ -9,7 +9,7 @@ import { phraseKey, usePhrasebook } from '../../context/phrasebook'
 import type { CatalogLanguage } from '../../data/phrasebook/catalog'
 import type { LearnPhrase, Situation } from '../../data/phrasebook/phrases'
 import { canRecognize, listenOnce, speak, stopSpeaking, RATE_NORMAL, RATE_SLOW } from '../../lib/speech'
-import { similarity } from '../../lib/text'
+import { similarity, words } from '../../lib/text'
 
 const XP_FIRST_LISTEN = 2
 const XP_GOOD_SPEAK = 5
@@ -29,7 +29,7 @@ interface Props {
 
 export default function PhrasePlayer({ lang, situation, phrases, onStartTests }: Props) {
   const { addXp } = useProgress()
-  const { heard, markHeard, notes, setNote, review, addToReview } = usePhrasebook()
+  const { heard, markHeard, notes, setNote, review, addToReview, favorites, toggleFavorite, favoriteWords, toggleFavoriteWord } = usePhrasebook()
   const [index, setIndex] = useState(0)
   const [autoplay, setAutoplay] = useState(false)
   const [showNote, setShowNote] = useState(false)
@@ -137,6 +137,8 @@ export default function PhrasePlayer({ lang, situation, phrases, onStartTests }:
   }
 
   const inReview = !!review[key]
+  const isFavorite = favorites.includes(key)
+  const phraseWords = [...new Set(words(phrase.text, lang.speechCode))]
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,320px)_1fr]">
@@ -169,6 +171,7 @@ export default function PhrasePlayer({ lang, situation, phrases, onStartTests }:
                     <span className="block truncate font-medium text-slate-900 dark:text-white" dir="auto">{p.text}</span>
                     <span className="block truncate text-xs text-slate-500 dark:text-slate-400">{p.meaning}</span>
                   </span>
+                  {favorites.includes(phraseKey(lang.id, p.id)) && <Heart className="relative size-3.5 fill-rose-500 text-rose-500" />}
                   {done && (
                     <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="relative grid size-5 place-items-center rounded-full bg-emerald-500 text-white">
                       <Check className="size-3" />
@@ -216,6 +219,17 @@ export default function PhrasePlayer({ lang, situation, phrases, onStartTests }:
               {index + 1} / {phrases.length}
             </span>
             {inReview && <span className="absolute top-3 right-3 rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-amber-950">In review</span>}
+            <motion.button
+              whileTap={{ scale: 0.8 }}
+              animate={isFavorite ? { scale: [1, 1.3, 1] } : {}}
+              onClick={() => toggleFavorite(key)}
+              className="absolute right-3 bottom-3 grid size-11 place-items-center rounded-full bg-white/90 shadow-md dark:bg-slate-900/90"
+              aria-label={isFavorite ? 'Remove from favourites' : 'Add to favourites'}
+              aria-pressed={isFavorite}
+              title="Favourite phrase"
+            >
+              <Heart className={`size-5 ${isFavorite ? 'fill-rose-500 text-rose-500' : 'text-slate-500'}`} />
+            </motion.button>
           </div>
 
           <div className="p-6 text-center sm:p-8">
@@ -224,6 +238,24 @@ export default function PhrasePlayer({ lang, situation, phrases, onStartTests }:
                 <p className="text-3xl font-bold text-slate-900 sm:text-4xl dark:text-white" dir="auto" lang={lang.speechCode}>{phrase.text}</p>
                 {phrase.romanization && <p className="mt-2 text-lg text-primary-700 italic dark:text-primary-300">{phrase.romanization}</p>}
                 <p className="mt-2 text-slate-500 dark:text-slate-400">{phrase.meaning}</p>
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5">
+                  <span className="text-xs text-slate-400">Save a word:</span>
+                  {phraseWords.map((w) => {
+                    const wk = `${lang.id}:${w}`
+                    const saved = favoriteWords.includes(wk)
+                    return (
+                      <motion.button
+                        key={w}
+                        whileTap={{ scale: 0.85 }}
+                        onClick={() => toggleFavoriteWord(wk)}
+                        aria-pressed={saved}
+                        className={`rounded-full border px-2.5 py-0.5 text-sm transition ${saved ? 'border-amber-400 bg-amber-100 font-semibold text-amber-800 dark:bg-amber-500/20 dark:text-amber-200' : 'border-slate-200 text-slate-600 hover:border-amber-300 dark:border-slate-700 dark:text-slate-300'}`}
+                      >
+                        {saved ? '★' : '☆'} {w}
+                      </motion.button>
+                    )
+                  })}
+                </div>
               </motion.div>
             </AnimatePresence>
 

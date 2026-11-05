@@ -24,7 +24,7 @@ export default function Header({ theme, onToggleTheme, onOpenMenu }: Props) {
     : []
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/80">
+    <header className="print:hidden sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/80">
       <div className="flex h-16 items-center gap-3 px-4 sm:px-6">
         <button
           onClick={onOpenMenu}

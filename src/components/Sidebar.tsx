@@ -122,7 +122,7 @@ export default function Sidebar({ mobileOpen, onClose }: Props) {
   return (
     <>
       {/* Desktop */}
-      <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-64 shrink-0 border-r border-slate-200/70 bg-white/60 lg:block dark:border-slate-800 dark:bg-slate-950/60">
+      <aside className="print:hidden sticky top-16 hidden h-[calc(100vh-4rem)] w-64 shrink-0 border-r border-slate-200/70 bg-white/60 lg:block dark:border-slate-800 dark:bg-slate-950/60">
         <SidebarContent />
       </aside>
 

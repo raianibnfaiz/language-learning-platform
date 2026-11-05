@@ -32,3 +32,19 @@ body {
   scrollbar-width: thin;
   scrollbar-color: rgb(148 163 184 / 0.4) transparent;
 }
+
+/* Printing a report: plain white page, keep colours of bars and badges */
+@media print {
+  html,
+  body {
+    background: white !important;
+    color: #1e293b;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  @page {
+    margin: 14mm;
+  }
+}

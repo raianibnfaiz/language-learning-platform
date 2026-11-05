@@ -22,6 +22,10 @@ export interface PhrasebookState {
   review: Record<string, ReviewCard>
   /** Recently opened language ids, newest first */
   recent: string[]
+  /** Favourite phrases, as phrase keys */
+  favorites: string[]
+  /** Favourite single words, as `${langId}:${word}` */
+  favoriteWords: string[]
 }
 
 export interface PhrasebookContextValue extends PhrasebookState {
@@ -33,6 +37,8 @@ export interface PhrasebookContextValue extends PhrasebookState {
   addToReview: (keys: string[]) => void
   answerReview: (key: string, knewIt: boolean) => void
   visitLanguage: (langId: string) => void
+  toggleFavorite: (key: string) => void
+  toggleFavoriteWord: (key: string) => void
 }
 
 export const PhrasebookContext = createContext<PhrasebookContextValue | null>(null)

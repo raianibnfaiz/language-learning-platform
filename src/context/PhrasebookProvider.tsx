@@ -4,7 +4,9 @@ import { dayKey, todayKey } from './progress'
 
 const STORAGE_KEY = 'linguawealth.phrasebook'
 
-const empty: PhrasebookState = { heard: [], notes: {}, stars: {}, review: {}, recent: [] }
+const empty: PhrasebookState = { heard: [], notes: {}, stars: {}, review: {}, recent: [], favorites: [], favoriteWords: [] }
+
+const toggle = (list: string[], key: string) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key])
 
 function load(): PhrasebookState {
   try {
@@ -84,13 +86,16 @@ export function PhrasebookProvider({ children }: { children: ReactNode }) {
     setState((s) => (s.recent[0] === langId ? s : { ...s, recent: [langId, ...s.recent.filter((id) => id !== langId)].slice(0, 6) }))
   }, [])
 
+  const toggleFavorite = useCallback((key: string) => setState((s) => ({ ...s, favorites: toggle(s.favorites, key) })), [])
+  const toggleFavoriteWord = useCallback((key: string) => setState((s) => ({ ...s, favoriteWords: toggle(s.favoriteWords, key) })), [])
+
   const value = useMemo(() => {
     const today = todayKey()
     const due = Object.entries(state.review)
       .filter(([, c]) => c.due <= today)
       .map(([k]) => k)
-    return { ...state, due, markHeard, setNote, recordTest, addToReview, answerReview, visitLanguage }
-  }, [state, markHeard, setNote, recordTest, addToReview, answerReview, visitLanguage])
+    return { ...state, due, markHeard, setNote, recordTest, addToReview, answerReview, visitLanguage, toggleFavorite, toggleFavoriteWord }
+  }, [state, markHeard, setNote, recordTest, addToReview, answerReview, visitLanguage, toggleFavorite, toggleFavoriteWord])
 
   return <PhrasebookContext.Provider value={value}>{children}</PhrasebookContext.Provider>
 }

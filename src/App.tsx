@@ -22,6 +22,7 @@ const PhrasebookHome = lazy(() => import('./pages/phrasebook/PhrasebookHome'))
 const LanguageHub = lazy(() => import('./pages/phrasebook/LanguageHub'))
 const SituationPage = lazy(() => import('./pages/phrasebook/SituationPage'))
 const Review = lazy(() => import('./pages/phrasebook/Review'))
+const Reports = lazy(() => import('./pages/Reports'))
 
 const routes = [
   { path: '/', element: <Dashboard /> },
@@ -31,6 +32,7 @@ const routes = [
   { path: '/phrasebook/:langId', element: <LanguageHub /> },
   { path: '/phrasebook/:langId/:situationId', element: <SituationPage /> },
   { path: '/review', element: <Review /> },
+  { path: '/reports', element: <Reports /> },
   { path: '/practice', element: <Practice /> },
   { path: '/progress', element: <Progress /> },
   { path: '/bookmarks', element: <Bookmarks /> },
@@ -55,7 +57,7 @@ export default function App() {
         <div className="flex">
           <Sidebar mobileOpen={menuOpen} onClose={() => setMenuOpen(false)} />
           <div className="flex min-w-0 flex-1 flex-col">
-            <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:py-8">
+            <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:py-8 print:max-w-none print:p-0">
               <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                   {routes.map((r) => (

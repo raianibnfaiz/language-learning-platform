@@ -4,7 +4,7 @@ import { currentYear } from '../lib/dates'
 
 export default function Footer() {
   return (
-    <footer className="mt-12 border-t border-slate-200/70 dark:border-slate-800">
+    <footer className="print:hidden mt-12 border-t border-slate-200/70 dark:border-slate-800">
       <div className="grid gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
         <div className="sm:col-span-2">
           <p className="text-lg font-bold text-slate-900 dark:text-white">
