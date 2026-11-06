@@ -3,6 +3,7 @@ import { Suspense, lazy, useEffect, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Footer from './components/Footer'
 import Header from './components/Header'
+import HelpBot from './components/HelpBot'
 import PageTransition from './components/PageTransition'
 import Sidebar from './components/Sidebar'
 import { PhrasebookProvider } from './context/PhrasebookProvider'
@@ -69,6 +70,7 @@ export default function App() {
             <Footer />
           </div>
         </div>
+        <HelpBot />
       </div>
       </PhrasebookProvider>
     </ProgressProvider>
